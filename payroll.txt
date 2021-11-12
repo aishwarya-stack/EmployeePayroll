@@ -1,0 +1,198 @@
+===========================================================
+--> UC1 Ability to create a payroll service database
+===========================================================
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| address_book_service |
+| information_schema   |
+| mysql                |
+| performance_schema   |
+| sakila               |
+| student_management   |
+| sys                  |
+| world                |
++----------------------+
+8 rows in set (0.01 sec)
+
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| address_book_service |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sakila               |
+| student_management   |
+| sys                  |
+| world                |
++----------------------+
+9 rows in set (0.00 sec)
+
+mysql> use payroll_service
+Database changed
+
+===================================================================================================================
+--> UC2  Ability to create a employee payroll table in the payroll service database to manage employee payrolls
+===================================================================================================================
+
+mysql>  create table employee_payroll(id int not null auto_increment, name varchar(50) not null,salary Double not null,startDate Date not null, primary key(id) );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| employee_payroll          |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> desc employee_payroll;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int         | NO   | PRI | NULL    | auto_increment |
+| name      | varchar(50) | NO   |     | NULL    |                |
+| salary    | double      | NO   |     | NULL    |                |
+| startDate | date        | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.02 sec)
+
+==================================================================================================================
+--> UC3 Ability to create employee payroll data in the payroll service database as part of CRUD Operation
+==================================================================================================================
+
+mysql> insert into employee_payroll values(1,"Aishwarya",30000.00,"2021-05-12");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from employee_payroll;
++----+-------------+--------+------------+
+| id | name        | salary | startDate  |
++----+-------------+--------+------------+
+|  1 | Aishwarya   |  30000 | 2021-05-12 |
++----+-------------+--------+------------+
+1 row in set (0.00 sec)
+
+mysql> insert into employee_payroll(name, salary,startDate)values("sandhya",30000,"2021-01-11");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employee_payroll(name, salary,startDate)values("renu",35000,"2021-01-05");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employee_payroll(name, salary,startDate)values("vidya",25000,"2021-04-25");
+Query OK, 1 row affected (0.02 sec)
+
+=====================================================================================================
+--> UC4 Ability to retrieve all the employee payroll data that is added to payroll service database
+======================================================================================================
+
+mysql> select * from employee_payroll;
++----+----------+--------+------------+
+| id | name     | salary | startDate  |
++----+----------+--------+------------+
+|  1 | aishwarya |  30000 | 2021-05-12 |
+|  2 | sandhya   |  30000 | 2021-01-11 |
+|  3 | renu      |  35000 | 2021-01-05 |
+|  4 | vidya     |  25000 | 2021-04-25 |
++----+-----------+--------+------------+
+4 rows in set (0.00 sec)
+
+
+===========================================================================================================================================================================
+--> UC5 -Ability to retrieve salary data for a particular employee as well as all employees who have joined in a particular data range from the payroll service database
+===========================================================================================================================================================================
+
+mysql> select salary from employee_payroll where name="renu";
++--------+
+| salary |
++--------+
+|  35000 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select salary from employee_payroll where  startDate BETWEEN CAST("2021-01-01"as Date) AND Date(NOW());
++--------+
+| salary |
++--------+
+|  30000 |
+|  30000 |
+|  35000 |
+|  25000 |
++--------+
+4 rows in set (0.01 sec)
+
+===================================================================================================================
+--> UC6 Ability to add Gender to Employee Payroll Table and Update the Rows to reflect the correct Employee Gender
+===================================================================================================================
+
+mysql> alter table employee_payroll add gender varchar(50);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update employee_payroll set gender ="female" where id>0;
+Query OK, 4 rows affected (0.02 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+========================================================================================
+--> UC7 Ability to find sum, average, min, max and number of male and female employees
+========================================================================================
+
+
+mysql> select * from employee_payroll;
++----+-----------+--------+------------+----------+
+| id | name      | salary | startDate  | gender   |
++----+-----------+--------+------------+----------+
+|  1 | Aishwarya |  30000 | 2021-05-12 | Female   |
+|  2 | sandhya   |  30000 | 2021-01-11 | Female   |
+|  3 | renu      |  35000 | 2021-01-05 | Female   |
+|  4 | vidya     |  25000 | 2021-04-25 | Female   |
++----+-----------+--------+------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select SUM(salary)from employee_payroll;
++-------------+
+| SUM(salary) |
++-------------+
+|      120000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select AVG(salary)from employee_payroll;
++-------------+
+| AVG(salary) |
++-------------+
+|       30000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select MIN(salary)from employee_payroll;
++-------------+
+| MIN(salary) |
++-------------+
+|       25000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select MAX(salary)from employee_payroll;
++-------------+
+| MAX(salary) |
++-------------+
+|       35000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select COUNT(salary)from employee_payroll;
++---------------+
+| COUNT(salary) |
++---------------+
+|             4 |
++---------------+
+1 row in set (0.01 sec)
+
